@@ -1,7 +1,7 @@
 """Notations:
 S: Susceptible
 I: Infected
-R: Reconvered
+R: Removed
 Q: Quarantined
 
 alpha: R -> S
@@ -39,7 +39,7 @@ def fear_function(I, dIdt, phi):
     )
 
 
-def dydt(t, y, R_hist, params):
+def dydt_fear_waning(t, y, R_hist, params):
     """Create the system of eqaution
 
     Parameters
@@ -80,11 +80,13 @@ def dydt(t, y, R_hist, params):
     return np.array([dSdt, dIdt, dRdt, dQdt])
 
 
-def custom_rk4(t, y0, t0, I_cutoff, params):
+def integrator(func, t, y0, t0, I_cutoff, params):
     """Custom rk4 integrator
 
     Parameters
     ----------
+    func : function
+        function which is to be integrated
     t : float
         time
     y0 : array like
@@ -118,10 +120,10 @@ def custom_rk4(t, y0, t0, I_cutoff, params):
         if I < I_cutoff:
             y = np.array([S + Q, I, R, 0])
 
-        k1 = h * dydt(t0, y, R_hist, params)
-        k2 = h * dydt(t0 + 0.5 * h, y + 0.5 * k1, R_hist, params)
-        k3 = h * dydt(t0 + 0.5 * h, y + 0.5 * k2, R_hist, params)
-        k4 = h * dydt(t0 + h, y + k3, R_hist, params)
+        k1 = h * func(t0, y, R_hist, params)
+        k2 = h * func(t0 + 0.5 * h, y + 0.5 * k1, R_hist, params)
+        k3 = h * func(t0 + 0.5 * h, y + 0.5 * k2, R_hist, params)
+        k4 = h * func(t0 + h, y + k3, R_hist, params)
         y = y + (1.0 / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
 
         t0 = t0 + h
@@ -130,31 +132,29 @@ def custom_rk4(t, y0, t0, I_cutoff, params):
     return np.transpose((np.array(y_hist)))
 
 
-if __name__ == "__main__":
+alpha = 0.5
+beta = 0.08
+gamma = 0.02
+phi = 1e-3
+N = 1.3526e9
+I_cutoff = 1e4
 
-    alpha = 0.5
-    beta = 0.08
-    gamma = 0.02
-    phi = 1e-3
-    N = 1.3526e9
-    I_cutoff = 1e4
+S_init, I_init, R_init, Q_init = N - 2006, 2000, 6, 0
+y_init = [S_init, I_init, R_init, Q_init]
+params = [alpha, beta, gamma, phi]
 
-    S_init, I_init, R_init, Q_init = N - 2006, 2000, 6, 0
-    y_init = [S_init, I_init, R_init, Q_init]
-    params = [alpha, beta, gamma, phi]
+days = 400
 
-    days = 400
+[S, I, R, Q] = integrator(dydt_fear_waning, days, y_init, 0, I_cutoff, params)
 
-    [S, I, R, Q] = custom_rk4(days, y_init, 0, I_cutoff, params)
-
-    plt.figure()
-    tot = S + I + R + Q
-    plt.plot(np.arange(days), I, "b", label="Infectives")
-    # plt.plot(np.arange(days), tot, label="total")
-    # plt.plot(np.arange(days), R, "g", label="Recovered")
-    # plt.plot(np.arange(days), S, "r", label="Susceptible")
-    # plt.plot(np.arange(days), Q, "black", label="Quarantined")
-    plt.legend(loc="best")
-    plt.xlabel("time (days)")
-    plt.grid()
-    plt.show()
+plt.figure()
+tot = S + I + R + Q
+plt.plot(np.arange(days), I, "b", label="Infectives")
+# plt.plot(np.arange(days), tot, label="total")
+# plt.plot(np.arange(days), R, "g", label="Recovered")
+# plt.plot(np.arange(days), S, "r", label="Susceptible")
+# plt.plot(np.arange(days), Q, "black", label="Quarantined")
+plt.legend(loc="best")
+plt.xlabel("time (days)")
+plt.grid()
+plt.show()
