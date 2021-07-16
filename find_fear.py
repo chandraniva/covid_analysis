@@ -53,7 +53,7 @@ processed_dates = [list(map(int, day.split("/"))) for day in dates]
 date_obj = [date(yr, mnth, day) for (mnth, day, yr) in processed_dates]
 mobility_data["date"] = date_obj
 
-#hello there, this is general Kenobi
+# hello there, this is general Kenobi
 # plot Active Cases & 'Fear' side by side vs time since 2020-08-01
 
 I_range = I_1[184:]
@@ -74,7 +74,7 @@ ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
 color = "tab:blue"
 ax2.set_ylabel(
-    "sum except groceries and pharmacy", color=color
+    "google data (%)", color=color
 )  # we already handled the x-label with ax1
 ax2.plot_date(
     mobility_data["date"][168:],
@@ -85,20 +85,15 @@ ax2.plot_date(
 )
 ax2.tick_params(axis="y", labelcolor=color)
 
-ax3 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
-color = "tab:green"
-ax3.set_ylabel(
-    "grocery and pharmacy percent change", color=color
-)  # we already handled the x-label with ax1
-ax3.plot_date(
+ax2.plot_date(
     mobility_data["date"][168:],
     essensial,
     "-",
     label="grocery and pharmacy percent change",
     color=color,
+    linestyle="dashed",
 )
-ax3.tick_params(axis="y", labelcolor=color)
 
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
 fig.legend()
