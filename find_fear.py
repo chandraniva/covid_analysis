@@ -53,7 +53,7 @@ processed_dates = [list(map(int, day.split("/"))) for day in dates]
 date_obj = [date(yr, mnth, day) for (mnth, day, yr) in processed_dates]
 mobility_data["date"] = date_obj
 
-
+#hello there, this is general Kenobi
 # plot Active Cases & 'Fear' side by side vs time since 2020-08-01
 
 I_range = I_1[184:]
