@@ -56,46 +56,62 @@ mobility_data["date"] = date_obj
 
 # plot Active Cases & 'Fear' side by side vs time since 2020-08-01
 
-# I_range = I_1[184:]
-# fear = mobility_data["sum_except_groceries_and_pharmacy"][168:]
+I_range = I_1[184:]
+fear = mobility_data["sum_except_groceries_and_pharmacy"][168:]
+essensial = -mobility_data["grocery_and_pharmacy_percent_change"][168:]
 
-# fig, ax1 = plt.subplots()
+fig, ax1 = plt.subplots()
 
-# color = "tab:red"
-# ax1.set_xlabel("time")
-# ax1.set_ylabel("Active Cases", color=color)
-# ax1.plot_date(
-#     covid_data["Date_YMD"][184:], I_range, "-", label="Active Cases", color=color,
-# )
-# ax1.tick_params(axis="y", labelcolor=color)
+color = "tab:red"
+ax1.set_xlabel("time")
+ax1.set_ylabel("Active Cases", color=color)
+ax1.plot_date(
+    covid_data["Date_YMD"][184:], I_range, "-", label="Active Cases", color=color,
+)
+ax1.tick_params(axis="y", labelcolor=color)
 
-# ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
-# color = "tab:blue"
-# ax2.set_ylabel(
-#     "sum except groceries and pharmacy", color=color
-# )  # we already handled the x-label with ax1
-# ax2.plot_date(
-#     mobility_data["date"][168:],
-#     fear,
-#     "-",
-#     label="sum_except_groceries_and_pharmacy",
-#     color=color,
-# )
-# ax2.tick_params(axis="y", labelcolor=color)
+color = "tab:blue"
+ax2.set_ylabel(
+    "sum except groceries and pharmacy", color=color
+)  # we already handled the x-label with ax1
+ax2.plot_date(
+    mobility_data["date"][168:],
+    fear,
+    "-",
+    label="sum_except_groceries_and_pharmacy",
+    color=color,
+)
+ax2.tick_params(axis="y", labelcolor=color)
 
-# fig.tight_layout()  # otherwise the right y-label is slightly clipped
-# fig.legend()
+ax3 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = "tab:green"
+ax3.set_ylabel(
+    "grocery and pharmacy percent change", color=color
+)  # we already handled the x-label with ax1
+ax3.plot_date(
+    mobility_data["date"][168:],
+    essensial,
+    "-",
+    label="grocery and pharmacy percent change",
+    color=color,
+)
+ax3.tick_params(axis="y", labelcolor=color)
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+fig.legend()
 
 
 # plot Active cases vs 'fear' between 2021-02-10 2021-07-07
 
-I_range = I_1[377:525]
-maxI = np.max(I_range)
+# I_range = I_1[377:525]
+# maxI = np.max(I_range)
 
-mobility = mobility_data["sum_except_groceries_and_pharmacy"][361:]
-maxmobility = np.max(mobility)
-plt.plot(mobility / maxmobility, I_range / maxI, ".")
+# mobility = mobility_data["sum_except_groceries_and_pharmacy"][361:]
+# maxmobility = np.max(mobility)
+# plt.plot(mobility / maxmobility, I_range / maxI, ".")
 
 
 plt.show()
