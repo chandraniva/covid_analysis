@@ -74,7 +74,7 @@ print(y0[num**2:2*num**2].reshape((num,num)))
 print(y0[2*num**2:3*num**2].reshape((num,num)))
 """
 
-time = np.arange(100)
+time = np.arange(300)
 beta, gamma = 0.02, 0.01
 
 sol = si.odeint(network, y0, time, args=(beta,gamma))
