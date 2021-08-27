@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as si
-
+import matplotlib.animation as animation
+import matplotlib.cm as cm
 print("\n-------------------------- RHO --------------------------------------\n")
 
 num = 11
@@ -17,7 +18,7 @@ plt.imshow(rho)
 plt.colorbar()
 plt.title("rho")
 plt.show()
-
+  
 print("\n-------------------------- evolving infectives ------------------------------------\n")
 
 def sum_neighbours(A):
@@ -78,8 +79,7 @@ time = np.arange(300)
 beta, gamma = 0.02, 0.01
 
 sol = si.odeint(network, y0, time, args=(beta,gamma))
-
-
+frames =[];
 for i in range (len(time)):
     S = sol[i][0:num**2].reshape((num,num))
     I= sol[i][num**2:2*num**2].reshape((num,num))
@@ -88,4 +88,30 @@ for i in range (len(time)):
     plt.imshow(I)
     plt.colorbar()
     plt.show()
+    frames.append(I)
+
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+cv0 = frames[0]
+im = ax.imshow(cv0, origin='lower') # Here make an AxesImage rather than contour
+cb = fig.colorbar(im)
+tx = ax.set_title('Frame 0')
+
+def animate(i):
+    arr = frames[i]
+    vmax     = np.max(arr)
+    vmin     = np.min(arr)
+    im.set_data(arr)
+    im.set_clim(vmin, vmax)
+    tx.set_text('Network Model'.format(i))
+    # In this version you don't have to do anything to the colorbar,
+    # it updates itself when the mappable it watches (im) changes
+
+ani = animation.FuncAnimation(fig, animate, frames=len(time))
+
+plt.show()
+
+ani.save('network_model_without_fear.mp4')
+
 
