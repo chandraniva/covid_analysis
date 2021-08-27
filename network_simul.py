@@ -1,24 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as si
-
+import matplotlib.animation as animation
+import matplotlib.cm as cm
 print("\n-------------------------- RHO --------------------------------------\n")
 
-num = 51
+num = 11
 N = 1000
-population = N*np.ones((num,num))
+tot_population = N*np.ones((num,num))
 
 def gauss_2d(x,y,x0,y0,sigma,c):
     return np.exp(-1/(2*sigma**2)*((x-x0)**2+(y-y0)**2))+c
 
 X, Y = np.meshgrid(np.arange(num), np.arange(num))
-rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,10,0.1)
+rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)
 plt.imshow(rho)
 plt.colorbar()
 plt.title("rho")
 plt.show()
-
-print("\n-------------------------- Evolving Infectives ----------------------------------\n")
+  
+print("\n-------------------------- evolving infectives ------------------------------------\n")
 
 def sum_neighbours(A):
     n = len(A)
@@ -44,12 +45,12 @@ def sum_neighbours(A):
     return S
   
 
-def network(y,t,beta,gamma,P_travel):
+def network(y,t,beta,gamma):
     S = y[0:num**2].reshape((num,num))
     I = y[num**2:2*num**2].reshape((num,num))
     R = y[2*num**2:3*num**2].reshape((num,num))
     
-    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N + P_travel*(np.sum(I)-I-S) - P_travel*I
+    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N 
     dRdt = gamma * I
     dSdt = -beta*rho*S*I/N - beta*rho*S*sum_neighbours(I)/N 
     
@@ -58,11 +59,10 @@ def network(y,t,beta,gamma,P_travel):
     return dydt
 
 
-S0 = population.reshape(-1)
+S0 = tot_population.reshape(-1)
 
 I0 = np.zeros((num,num))
 I0[int((num-1)/2.),int((num+5)/2.)] = 10
-I0[int((num-9)/2.),int((num-3)/2.)] = 10
 I0 = I0.reshape(-1)
 
 R0 = np.zeros((num,num)).reshape(-1)
@@ -77,63 +77,42 @@ print(y0[2*num**2:3*num**2].reshape((num,num)))
 
 time = np.arange(300)
 beta, gamma = 0.02, 0.01
-P_travel = 1e-6
 
-sol = si.odeint(network, y0, time, args=(beta,gamma,P_travel))
-
-total_I = np.zeros(len(time))
-
+sol = si.odeint(network, y0, time, args=(beta,gamma))
+frames =[];
 for i in range (len(time)):
     S = sol[i][0:num**2].reshape((num,num))
     I= sol[i][num**2:2*num**2].reshape((num,num))
     R = sol[i][2*num**2:3*num**2].reshape((num,num))
     
-    total_I[i] = np.sum(I)
-    
-    plt.imshow(I)
-    plt.colorbar()
-    plt.show()
-
-plt.plot(time, total_I, label="total infectives using network")
+   # plt.imshow(I)
+   # plt.colorbar()
+   # plt.show()
+    frames.append(I)
 
 
-print("------------------- Usual SIR with same population -------------------------")
+fig = plt.figure()
+plt.axis("off")
+ax = fig.add_subplot(111)
+cv0 = frames[0]
+im = ax.imshow(cv0, origin='lower') # Here make an AxesImage rather than contour
+cb = fig.colorbar(im)
+tx = ax.set_title('Frame 0')
 
-total_pop = np.sum(population)
+def animate(i):
+    arr = frames[i]
+    vmax     = np.max(arr)
+    vmin     = np.min(arr)
+    im.set_data(arr)
+    im.set_clim(vmin, vmax)
+    tx.set_text('Network Model'.format(i))
+    # In this version you don't have to do anything to the colorbar,
+    # it updates itself when the mappable it watches (im) changes
 
-def SIR(y, t, beta, gamma):
-    [S, I, R] = y
-    dIdt = beta*I*S/total_pop - gamma*I
-    dRdt = gamma*I          
-    dSdt = - beta*I*S/total_pop 
-    dydt = [dSdt, dIdt, dRdt]
-    
-    return np.array(dydt)
+ani = animation.FuncAnimation(fig, animate, frames=len(time))
 
-y0_sir = [int(np.sum(S0)), int(np.sum(I0)), int(np.sum(R0))]
-
-sol_SIR = si.odeint(SIR, y0_sir, time, args=(beta,gamma))
-
-#plt.plot(time,sol_SIR[:,1], label="total infectives using SIR")
-plt.legend()
 plt.show()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ani.save('network_model_without_fear.mp4')
 
 
