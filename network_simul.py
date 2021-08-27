@@ -4,7 +4,7 @@ import scipy.integrate as si
 
 print("\n-------------------------- RHO --------------------------------------\n")
 
-num = 51
+num = 11
 N = 1000
 population = N*np.ones((num,num))
 
@@ -12,7 +12,7 @@ def gauss_2d(x,y,x0,y0,sigma,c):
     return np.exp(-1/(2*sigma**2)*((x-x0)**2+(y-y0)**2))+c
 
 X, Y = np.meshgrid(np.arange(num), np.arange(num))
-rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,10,0.1)
+rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)
 plt.imshow(rho)
 plt.colorbar()
 plt.title("rho")
@@ -49,7 +49,7 @@ def network(y,t,beta,gamma,P_travel):
     I = y[num**2:2*num**2].reshape((num,num))
     R = y[2*num**2:3*num**2].reshape((num,num))
     
-    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N + P_travel*(np.sum(I)-I-S) - P_travel*I
+    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N #+ P_travel*(np.sum(I)-I-S) - P_travel*I        
     dRdt = gamma * I
     dSdt = -beta*rho*S*I/N - beta*rho*S*sum_neighbours(I)/N 
     
