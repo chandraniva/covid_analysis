@@ -85,13 +85,14 @@ for i in range (len(time)):
     I= sol[i][num**2:2*num**2].reshape((num,num))
     R = sol[i][2*num**2:3*num**2].reshape((num,num))
     
-    plt.imshow(I)
-    plt.colorbar()
-    plt.show()
+   # plt.imshow(I)
+   # plt.colorbar()
+   # plt.show()
     frames.append(I)
 
 
 fig = plt.figure()
+plt.axis("off")
 ax = fig.add_subplot(111)
 cv0 = frames[0]
 im = ax.imshow(cv0, origin='lower') # Here make an AxesImage rather than contour
