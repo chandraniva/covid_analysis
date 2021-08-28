@@ -58,7 +58,6 @@ Y integrator(TIME t0, TIME t,  Y y, PARAMS *params) {
 	Y delta;
 	Y k[4];
 
-	int i;
 	while( t0<t ) {
 
 		k[0] = y_sprod(h,dydt_fear(t0, y, params));
@@ -75,17 +74,17 @@ Y integrator(TIME t0, TIME t,  Y y, PARAMS *params) {
 }
 
 
-int main() {
-	PARAMS params = {
-		.beta = 0.08,
-		.gamma = 0.02,
-		.phi = 0.002
-	};
-	Y y = {
-		.S = 1e10,
-		.I = 1 ,
-		.R = 3 ,
-		.Q = 0 
-	};
-	y = integrator(1,300,y,&params);
-}
+//int main() {
+//	PARAMS params = {
+//		.beta = 0.08,
+//		.gamma = 0.02,
+//		.phi = 0.002
+//	};
+//	Y y = {
+//		.S = 1e10,
+//		.I = 1 ,
+//		.R = 3 ,
+//		.Q = 0 
+//	};
+//	y = integrator(1,300,y,&params);
+//}
