@@ -1,0 +1,52 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/harshith/Programs/covid_analysis/src_c/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210110.0/
+CC	Makefile	/^CC=gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-Wall$/;"	m
+I	model.h	/^	double I;$/;"	m	struct:__anond482dfcc0108	typeref:typename:double
+I	readdata.h	/^	int I;$/;"	m	struct:daydata	typeref:typename:int
+N	model.c	/^double N = 1.3526e9;$/;"	v	typeref:typename:double
+OUTFILE	Makefile	/^OUTFILE=binary$/;"	m
+PARAMS	model.h	/^} PARAMS;$/;"	t	typeref:struct:__anond482dfcc0208
+Q	model.h	/^	double Q;$/;"	m	struct:__anond482dfcc0108	typeref:typename:double
+R	model.h	/^	double R;$/;"	m	struct:__anond482dfcc0108	typeref:typename:double
+R	readdata.h	/^	int R;$/;"	m	struct:daydata	typeref:typename:int
+S	model.h	/^	double S;$/;"	m	struct:__anond482dfcc0108	typeref:typename:double
+TIME	model.h	/^typedef int TIME;$/;"	t	typeref:typename:int
+Y	model.h	/^} Y;$/;"	t	typeref:struct:__anond482dfcc0108
+_COV_MODEL	model.h	/^#define _COV_MODEL$/;"	d
+_COV_READ_DATA	readdata.h	/^#define _COV_READ_DATA$/;"	d
+__anond482dfcc0108	model.h	/^typedef struct {$/;"	s
+__anond482dfcc0208	model.h	/^typedef struct {$/;"	s
+beta	model.h	/^	float beta;$/;"	m	struct:__anond482dfcc0208	typeref:typename:float
+clean	Makefile	/^clean:$/;"	t
+daydata	readdata.h	/^struct daydata {$/;"	s
+dydt_fear	model.c	/^Y dydt_fear(TIME t, Y y, PARAMS *params) {$/;"	f	typeref:typename:Y
+fear_function	model.c	/^double fear_function(TIME t, Y y, PARAMS *params) {$/;"	f	typeref:typename:double
+fitting	Makefile	/^fitting: fitting.o model.o readdata.o$/;"	t
+fitting.o	Makefile	/^fitting.o: fitting.c$/;"	t
+gamma	model.h	/^	float gamma;$/;"	m	struct:__anond482dfcc0208	typeref:typename:float
+install	Makefile	/^install: fitting$/;"	t
+main	fitting.c	/^int main () {$/;"	f	typeref:typename:int
+model.o	Makefile	/^model.o: model.c$/;"	t
+next	readdata.h	/^	struct daydata* next;$/;"	m	struct:daydata	typeref:struct:daydata *
+objective_fun_wrapper	fitting.c	/^double objective_fun_wrapper(unsigned n, const double* x, double* grad, void* f_data) {$/;"	f	typeref:typename:double
+optimize	fitting.c	/^void optimize() {$/;"	f	typeref:typename:void
+phi	model.h	/^	float phi;$/;"	m	struct:__anond482dfcc0208	typeref:typename:float
+print_actual_data	fitting.c	/^void print_actual_data() {$/;"	f	typeref:typename:void
+readdata	readdata.c	/^struct daydata* readdata() {$/;"	f	typeref:struct:daydata *
+readdata.o	Makefile	/^readdata.o: readdata.c$/;"	t
+square_err	model.c	/^double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {$/;"	f	typeref:typename:double
+test	fitting.c	/^void test() {$/;"	f	typeref:typename:void
+today	fitting.c	/^struct daydata* today;$/;"	v	typeref:struct:daydata *
+x	fitting.c	/^double x[] = { $/;"	v	typeref:typename:double[]
+y_sprod	model.c	/^Y y_sprod(float h, Y y) {$/;"	f	typeref:typename:Y
+y_sum	model.c	/^Y y_sum(Y y1, Y y2) {$/;"	f	typeref:typename:Y

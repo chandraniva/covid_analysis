@@ -5,6 +5,7 @@
 #include "readdata.h"
 
 struct daydata* readdata() {
+	int a; //temp variable
 
 	FILE* f1;
 	f1 = fopen("case_time_series.csv","r");
@@ -36,11 +37,12 @@ struct daydata* readdata() {
 		strtok(NULL,",");
 		key = strtok(NULL,",");
 		//printf("%ld\t",atol(key));
-		current->I = atol(key);
+		a = atol(key);
 		strtok(NULL,",");
 		key = strtok(NULL,",");
 		//printf("%ld\n",atol(key));
 		current->R = atol(key);
+		current->I = a - current->R;
 	}
 	fclose(f1);
 

@@ -1,11 +1,12 @@
 #ifndef _COV_MODEL
 #define _COV_MODEL
+#include "readdata.h"
 
 typedef struct {
-	float S;
-	float I;
-	float R;
-	float Q;
+	double S;
+	double I;
+	double R;
+	double Q;
 } Y;
 
 typedef struct {
@@ -14,8 +15,8 @@ typedef struct {
 	float phi;
 } PARAMS;
 
-typedef float TIME;
+typedef int TIME;
 
-Y integrator(TIME t0, TIME t,  Y y, PARAMS *params);
+double square_err(TIME t0, TIME t, PARAMS *params, struct daydata*);
 
 #endif
