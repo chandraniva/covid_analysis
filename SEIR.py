@@ -71,6 +71,7 @@ days = 300
 sol = np.zeros((days,4))
 t = np.zeros(days)
 
+
 for i in range (days):
     sol[i,:] = rk4(i,y_init,0,I_cutoff)
     t[i] = i
