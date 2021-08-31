@@ -6,9 +6,13 @@
 struct daydata* today;
 
 
-double x[] = { 
-	0.0486891,0.0119584,5.18946e-05
+double opt[] = { 
+			0.0495045,0.0123377,0.00050104,1.83065
 	};
+
+double *x = opt;
+TIME object_edate;
+TIME object_sdate;
 
 void print_actual_data() {
 	struct daydata* today;
@@ -27,52 +31,53 @@ double objective_fun_wrapper(unsigned n, const double* x, double* grad, void* f_
 	params.beta=x[0];
 	params.gamma=x[1];
 	params.phi=x[2];
+	params.pw=x[3];
 	// first wave 76th day to 377 day
-	return square_err(76,377,&params,today);
+	// FIT
+	return square_err(object_sdate,object_edate,&params,today);
 }
 
-void test_current_params_1st() {
+void test_current_params(int start, int end) {
 	today = readdata();
 	PARAMS params;
+	// TODO make func
 	params.beta=x[0];
 	params.gamma=x[1];
 	params.phi=x[2];
+	params.pw=x[3];
 	// first wave 76th day to 377 day
-	square_err(76,377,&params,today);
-}
-
-void test_current_params_2nd() {
-	today = readdata();
-	PARAMS params;
-	params.beta=x[0];
-	params.gamma=x[1];
-	params.phi=x[2];
-	// first wave 76th day to 377 day
-	square_err(378,576,&params,today);
+	printf("%g\n",square_err_verbose(start,end,&params,today));
 }
 
 
-void optimize() {
-	double lb[3] = { 0 , 0 , 0};
+
+double* optimize(TIME sdate, TIME edate) {
+
+	object_edate = edate;
+	object_sdate = sdate;
+
+	double lb[] = { 0 , 0.0123 , 0 , 0};
 	today = readdata();
 
 	nlopt_opt opt;
 
-	opt = nlopt_create(
-			NLOPT_LN_BOBYQA
-			, 3);
+	opt = nlopt_create( NLOPT_LN_BOBYQA , sizeof(lb)/sizeof(lb[0]) );
 	nlopt_set_lower_bounds(opt, lb);
 	nlopt_set_min_objective (opt, objective_fun_wrapper, NULL);
-	nlopt_set_xtol_rel(opt, 1e-4);
+	nlopt_set_xtol_rel(opt, 1e-10);
 
 	double minf;
 	printf("%d\n",nlopt_optimize(opt, x, &minf));
-	printf("%g,%g,%g\n",x[0],x[1],x[2]);
+	printf("%g,%g,%g,%g\n",x[0],x[1],x[2],x[3]);
+	printf("optimization error: %g\n",minf);
+	return x;
 }
 
 
 int main () {
-	//optimize();
-	test_current_params_2nd();
-	//print_actual_data();
+	// first wave 378th day to 576 day
+	//test_current_params(76, 377);
+	//test_current_params(378, 576);
+	x = optimize(420,500);
+	test_current_params(420, 500);
 }

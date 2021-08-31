@@ -42,17 +42,11 @@ struct daydata* readdata() {
 		key = strtok(NULL,",");
 		//printf("%ld\n",atol(key));
 		current->R = atol(key);
-		current->I = a - current->R;
+		current->I = a - current->R ;
 	}
 	fclose(f1);
 
 	return HEAD;
-//	current = HEAD;
-//	int count = 0;
-//	while(current) {
-//		printf("%d\t%d\n",current->I,current->R);
-//		current = current->next;
-//	}
 }
 
 

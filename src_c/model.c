@@ -14,8 +14,8 @@
 double N = 1.3526e9;
 
 double fear_function(TIME t, Y y, PARAMS *params) {
-	return params->phi * pow(y.I,2);
-	//return 0;
+	return params->phi * pow(y.I,params->pw);
+		//* (int)(1/(1 + exp(-1e308 * (y.I - 5*1e5) ) ));
 }
 
 Y dydt_fear(TIME t, Y y, PARAMS *params) {
@@ -37,51 +37,87 @@ Y y_sum(Y y1, Y y2) {
 	y1.I += y2.I; y1.Q += y2.Q; y1.S += y2.S; y1.R += y2.R;
 	return y1;
 }
-double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
-	Y y;
 
+Y rk_increment_day(TIME t, Y y,PARAMS *params){
+	Y k[4];
+	double time = t;
+	Y delta;
+	int i;
+
+	double h=0.1;
+	for(i=0;i<10;i++) {
+		time+=h;
+		k[0] = y_sprod(h,dydt_fear(time, y, params));
+		k[1] = y_sprod(h,dydt_fear(time+h/2, y_sum(y,y_sprod(0.5,k[0])), params));
+		k[2] = y_sprod(h,dydt_fear(time+h/2, y_sum(y,y_sprod(0.5,k[1])), params));
+		k[3] = y_sprod(h,dydt_fear(time+h, y_sum(y,k[2]), params));
+
+		delta = y_sprod(1.0/6.0,y_sum(y_sum(k[0],y_sprod(2,k[1])),y_sum(y_sprod(2,k[2]),k[3])));
+		y = y_sum(y,delta);
+	}
+	return y;
+}
+void simulate(Y y, int total_days, PARAMS *params) {
+	for(int day=0; day<total_days ; day++) {
+		y = rk_increment_day(day,y,params);
+		printf("%d\t%g\n",day,y.I);
+	}
+}
+double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
+
+	Y y;
 	double serror = 0;
 	// y has the initial values in the start
-	double h = 0.1;
-	// t0 goes to t
-
-	Y delta;
-	Y k[4];
-
 	int i;
-	double time;
-
-	for(i=0; i<76; i++) {
+	for(i=0; i<t0; i++) {
 		today = today->next;
 	}
+
+	// initial values for the model
 	y.I = today->I;
 	y.R = today->R;
 	y.Q = 0;
 	y.S = N - y.I - y.R - y.Q;
 
 	while( t0<t && today ) {
-		time = t0;
-		for(i=0;i<10;i++) {
-			time+=h;
-			k[0] = y_sprod(h,dydt_fear(time, y, params));
-			k[1] = y_sprod(h,dydt_fear(time+h/2, y_sum(y,y_sprod(0.5,k[0])), params));
-			k[2] = y_sprod(h,dydt_fear(time+h/2, y_sum(y,y_sprod(0.5,k[1])), params));
-			k[3] = y_sprod(h,dydt_fear(time+h, y_sum(y,k[2]), params));
-			//printf("k.I : %g %g %g %g\n",k[0].I,k[1].I,k[2].I,k[3].I);
-
-			delta = y_sprod(1.0/6.0,y_sum(y_sum(k[0],y_sprod(2,k[1])),y_sum(y_sprod(2,k[2]),k[3])));
-			//printf("delta I : %g\n",delta.I);
-			y = y_sum(y,delta);
-		}
-		//printf("%d\t%g\n",t0,y.I);
-		printf("%d\t%g\t%d\n",t0,y.I,today->I);
-
+		y = rk_increment_day(t0,y,params);
 		serror += pow((y.I - today->I),2);
 		t0++;
 		today = today->next;
 	}
-	printf("%g\n",y.I);
-	printf("error: %g\n",serror);
+	return serror;
+}
+
+
+double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
+
+	FILE *oftr;
+	oftr = fopen("c.dat","w");
+	Y y;
+
+	double serror = 0;
+	// y has the initial values in the start
+	int i;
+	for(i=0; i<t0; i++) {
+		today = today->next;
+	}
+
+	// initial values for the model
+	y.I = today->I;
+	y.R = today->R;
+	y.Q = 0;
+	y.S = N - y.I - y.R - y.Q;
+
+	while( t0<t && today ) {
+		y = rk_increment_day(t0,y,params);
+		fprintf(oftr,"%d\t%g\t%d\n",t0,y.I,today->I);
+		serror += pow((y.I - today->I),2);
+		t0++;
+		today = today->next;
+	}
+	//printf("%g\n",y.I);
+	//printf("error: %g\n",serror);
+	fclose(oftr);
 	return serror;
 }
 
