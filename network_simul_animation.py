@@ -13,7 +13,7 @@ def gauss_2d(x,y,x0,y0,sigma,c):
     return np.exp(-1/(2*sigma**2)*((x-x0)**2+(y-y0)**2))+c
 
 X, Y = np.meshgrid(np.arange(num), np.arange(num))
-rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)
+rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)+ gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)+ gauss_2d(X,Y, (num-15)/2., (num-7)/2. , 2, 0.1)+gauss_2d(X,Y, (num+27)/2., (num-17)/2. , 5, 0.3)
 plt.imshow(rho)
 plt.colorbar()
 plt.title("rho")
