@@ -1,0 +1,10 @@
+
+# for the first wave optimization
+params.beta= 0.0498588
+params.gamma= 0.0123458
+params.phi= 0.00178522
+params.pw= 1.73658
+
+# fear function
+params->phi * pow(y.I,params->pw);
+

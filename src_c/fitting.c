@@ -7,7 +7,7 @@ struct daydata* today;
 
 
 double opt[] = { 
-			0.0495045,0.0123377,0.00050104,1.83065
+				0.0498588,0.0123458,0.00178522,1.73658
 	};
 
 double *x = opt;
@@ -78,6 +78,7 @@ int main () {
 	// first wave 378th day to 576 day
 	//test_current_params(76, 377);
 	//test_current_params(378, 576);
-	x = optimize(420,500);
-	test_current_params(420, 500);
+	//x = optimize(420,499);
+	x = optimize(76,377);
+	test_current_params(420, 576);
 }
