@@ -13,13 +13,12 @@ def gauss_2d(x,y,x0,y0,sigma,c):
 
 X, Y = np.meshgrid(np.arange(num), np.arange(num))
 rho = gauss_2d(X,Y,(num-1)/2.,(num-1)/2.,3,0.1)
-rho = np.ones((num,num))
+#rho = np.ones((num,num))
 
 plt.imshow(rho)
 plt.colorbar()
 plt.title("rho")
 plt.show()
-
 
 
 print("\n-------------------------- Evolving Infectives ----------------------------------\n")
@@ -53,40 +52,36 @@ def network(y,t,beta,gamma,P_travel):
     I = y[num**2:2*num**2].reshape((num,num))
     R = y[2*num**2:3*num**2].reshape((num,num))
     
+    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N \
+    + P_travel*(np.sum(I)-I-sum_neighbours(I))/num**2 - P_travel*I*(num**2-9)/num**2        
     
-    dIdt = beta*rho*S*I/N - gamma*I + beta*rho*S*sum_neighbours(I)/N 
-    + P_travel*(np.sum(I)-I-sum_neighbours(I)) #- P_travel*I*(num**2-9))/num**2        
+    dRdt = gamma * R + P_travel*(np.sum(R)-R-sum_neighbours(R))/num**2 - P_travel*R*(num**2-9)/num**2   
     
-    dRdt = gamma * R + P_travel*(np.sum(R)-R-sum_neighbours(R)) #- P_travel*R*(num**2-9))/num**2   
-    
-    dSdt = -beta*rho*S*I/N - beta*rho*S*sum_neighbours(I)/N 
-    + P_travel*(np.sum(S)-S-sum_neighbours(S)) #- P_travel*S*(num**2-9))/num**2  
+    dSdt = -beta*rho*S*I/N - beta*rho*S*sum_neighbours(I)/N \
+    + P_travel*(np.sum(S)-S-sum_neighbours(S))/num**2 - P_travel*S*(num**2-9)/num**2  
     
     dydt = np.concatenate((dSdt.reshape(-1),dIdt.reshape(-1),dRdt.reshape(-1)))
     
     return dydt
 
 
+
 S0 = population.reshape(-1)
 
 I0 = np.zeros((num,num))
-I0[int((num-1)/2.),int((num+5)/2.)] = 2
-I0[int((num-9)/2.),int((num-3)/2.)] = 1
+I0[int((num-1)/2.),int((num+5)/2.)] = 20
+#I0[0,0] = 20
+I0[int((num-9)/2.),int((num-3)/2.)] = 10
 I0 = I0.reshape(-1)
 
 R0 = np.zeros((num,num)).reshape(-1)
 
 y0 = np.concatenate((S0, I0, R0))
 
-"""
-print(y0[0:num**2].reshape((num,num)))
-print(y0[num**2:2*num**2].reshape((num,num)))
-print(y0[2*num**2:3*num**2].reshape((num,num)))
-"""
 
 time = np.arange(300)
-beta, gamma = 0.0, 0.0
-P_travel = 2
+beta, gamma = 0.02, 0.01
+P_travel = 1e-2
 
 sol = si.odeint(network, y0, time, args=(beta,gamma,P_travel))
 
@@ -119,30 +114,11 @@ def SIR(y, t, beta, gamma):
     
     return np.array(dydt)
 
-y0_sir = [int(np.sum(S0)), int(np.sum(I0)), int(np.sum(R0))]
+y0_sir = [(np.sum(S0)), (np.sum(I0)), (np.sum(R0))]
 
 sol_SIR = si.odeint(SIR, y0_sir, time, args=(beta,gamma))
 
-#plt.plot(time,sol_SIR[:,1], label="total infectives using SIR")
+plt.plot(time,sol_SIR[:,1], label="total infectives using SIR")
 plt.legend()
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
