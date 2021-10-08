@@ -8,7 +8,7 @@
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
-!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210110.0/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20210905.0/
 CC	Makefile	/^CC=gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS=-Wall$/;"	m
 I	model.h	/^	double I;$/;"	m	struct:__anond482dfcc0108	typeref:typename:double
@@ -38,15 +38,23 @@ install	Makefile	/^install: fitting$/;"	t
 main	fitting.c	/^int main () {$/;"	f	typeref:typename:int
 model.o	Makefile	/^model.o: model.c$/;"	t
 next	readdata.h	/^	struct daydata* next;$/;"	m	struct:daydata	typeref:struct:daydata *
+object_edate	fitting.c	/^TIME object_edate;$/;"	v	typeref:typename:TIME
+object_sdate	fitting.c	/^TIME object_sdate;$/;"	v	typeref:typename:TIME
 objective_fun_wrapper	fitting.c	/^double objective_fun_wrapper(unsigned n, const double* x, double* grad, void* f_data) {$/;"	f	typeref:typename:double
-optimize	fitting.c	/^void optimize() {$/;"	f	typeref:typename:void
+opt	fitting.c	/^double opt[] = { 0.0498588,0.0123458,0.00178522,1.73658 };$/;"	v	typeref:typename:double[]
+optimize	fitting.c	/^double* optimize(TIME sdate, TIME edate) {$/;"	f	typeref:typename:double *
 phi	model.h	/^	float phi;$/;"	m	struct:__anond482dfcc0208	typeref:typename:float
 print_actual_data	fitting.c	/^void print_actual_data() {$/;"	f	typeref:typename:void
+pw	model.h	/^	float pw;$/;"	m	struct:__anond482dfcc0208	typeref:typename:float
 readdata	readdata.c	/^struct daydata* readdata() {$/;"	f	typeref:struct:daydata *
 readdata.o	Makefile	/^readdata.o: readdata.c$/;"	t
+rk_increment_day	model.c	/^Y rk_increment_day(TIME t, Y y,PARAMS *params){$/;"	f	typeref:typename:Y
+simulate	model.c	/^void simulate(Y y, int total_days, PARAMS *params) {$/;"	f	typeref:typename:void
 square_err	model.c	/^double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {$/;"	f	typeref:typename:double
-test	fitting.c	/^void test() {$/;"	f	typeref:typename:void
+square_err_st_line	model.c	/^double square_err_st_line(TIME t0, TIME t, PARAMS *params , struct daydata* today) {$/;"	f	typeref:typename:double
+square_err_verbose	model.c	/^double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today) {$/;"	f	typeref:typename:double
+test_current_params	fitting.c	/^void test_current_params(int start, int end) {$/;"	f	typeref:typename:void
 today	fitting.c	/^struct daydata* today;$/;"	v	typeref:struct:daydata *
-x	fitting.c	/^double x[] = { $/;"	v	typeref:typename:double[]
+x	fitting.c	/^double *x = opt;$/;"	v	typeref:typename:double *
 y_sprod	model.c	/^Y y_sprod(float h, Y y) {$/;"	f	typeref:typename:Y
 y_sum	model.c	/^Y y_sum(Y y1, Y y2) {$/;"	f	typeref:typename:Y
