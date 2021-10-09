@@ -5,7 +5,7 @@ import scipy.integrate as si
 print("\n-------------------------- RHO --------------------------------------\n")
 
 num = 11
-N = 1000
+N = 100
 population = N*np.ones((num,num))
 
 def gauss_2d(x,y,x0,y0,sigma,c):
