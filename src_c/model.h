@@ -20,7 +20,9 @@ typedef int TIME;
 
 double square_err(TIME t0, TIME t, PARAMS *params, struct daydata*);
 
-double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today);
+double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today, char* file_name);
 
 void simulate(Y y, int total_days, PARAMS *params);
+
+double square_err_st_line(TIME t0, TIME t, PARAMS *params , struct daydata* today);
 #endif

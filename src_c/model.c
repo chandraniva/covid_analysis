@@ -63,6 +63,37 @@ void simulate(Y y, int total_days, PARAMS *params) {
 		printf("%d\t%g\n",day,y.I);
 	}
 }
+
+
+// STR LINE 
+//
+double square_err_st_line(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
+
+	FILE *oftr;
+	oftr = fopen("c.dat","w");
+
+	double serror = 0;
+	// y has the initial values in the start
+	int i;
+	for(i=0; i<t0; i++) {
+		today = today->next;
+	}
+
+	// x day
+	double temp;
+
+	while( t0<t && today ) {
+		temp = - params->beta * exp(-t0);
+		serror += pow( temp - today->I  ,2);
+		fprintf(oftr,"%d\t%g\t%d\n",t0,temp,today->I);
+		t0++;
+		today = today->next;
+	}
+	fclose(oftr);
+	return serror;
+}
+
+//
 double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
 
 	Y y;
@@ -89,10 +120,10 @@ double square_err(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
 }
 
 
-double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today) {
+double square_err_verbose(TIME t0, TIME t, PARAMS *params , struct daydata* today, char* file_name) {
 
 	FILE *oftr;
-	oftr = fopen("c.dat","w");
+	oftr = fopen(file_name,"w");
 	Y y;
 
 	double serror = 0;
