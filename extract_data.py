@@ -65,8 +65,7 @@ subtracted_sum_ex_gro=[]
 for i in range(len(sum_except_groceries)):
     subtracted_sum_ex_gro.append(sum_except_groceries[i] - a_fit*daily_deceased[i+16]**p_fit)
     
-  
-    
+      
 def exp_decay(x,c,d):
     return c*np.exp(-d*x)
     
@@ -83,5 +82,24 @@ final_subtracted = []
 for i in range(len(subtracted_sum_ex_gro[90:])):
     final_subtracted.append(subtracted_sum_ex_gro[90+i]-c_fit*np.exp(-i*d_fit))
     
+
+print(len(final_subtracted))
+
+def sine(x,A,omega,delta):
+    return A*np.sin(omega*x+delta)
+
+np.savetxt("wiggles.txt",final_subtracted)
+
+A_fit, omega_fit, delta_fit =  curve_fit(sine, np.arange(len(final_subtracted)), final_subtracted,p0=[6,90,np.pi/2.])[0]
+print(A_fit, omega_fit,delta_fit)
+
 plt.plot(final_subtracted,'x')
-plt.show()
+plt.plot(np.arange(len(final_subtracted)),sine(np.arange(len(final_subtracted)),A_fit,omega_fit,delta_fit))
+plt.show()   
+
+
+    
+    
+    
+    
+    
